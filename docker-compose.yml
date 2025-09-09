@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: microservices-mongodb
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=microservices
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-network
+
+  user-service:
+    build: ./user-service
+    container_name: user-service-docker
+    ports:
+      - "3009:3001"
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/userdb
+      - JWT_SECRET=your-super-secret-jwt-key
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service-docker
+    ports:
+      - "3010:3002"
+    environment:
+      - PORT=3002
+      - MONGODB_URI=mongodb://mongodb:27017/productdb
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  microservices-network:
+    driver: bridge

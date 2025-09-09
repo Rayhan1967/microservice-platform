@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        npm install --prefix user-service
+        npm install --prefix product-service
+        npm install --prefix order-service
+        npm install --prefix api-gateway
+    
+    - name: Run tests
+      run: |
+        npm test --prefix user-service
+        npm test --prefix product-service
+    
+    - name: Build Docker images
+      run: |
+        docker build -t user-service:${{ github.sha }} ./user-service
+        docker build -t product-service:${{ github.sha }} ./product-service
+        
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to Azure Container Instances
+      run: |
+        az container create \
+          --resource-group microservices-rg \
+          --name user-service-${{ github.sha }} \
+          --image user-service:${{ github.sha }}

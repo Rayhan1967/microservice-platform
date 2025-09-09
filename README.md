@@ -9,7 +9,7 @@ Enterprise Microservices E-Commerce Platform
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 
 Live Demo
-- API Gateway**: [Demo URL]([https://your-demo-url.com](http://userservice-demo-0xray.eastus.azurecontainer.io:3001))
+- API Gateway**: [Demo URL]( https://your-demo-url.com](http://userservice-demo-0xray.eastus.azurecontainer.io:3001 )
 - Monitoring Dashboard**: [Grafana Dashboard](https://your-grafana-url.com)
 - CI/CD Pipeline**: [GitHub Actions](https://github.com/Rayhan1967/microservice-platform/actions)
 
